@@ -1,0 +1,20 @@
+//capi_js.html
+  <body>
+    <script>
+    Module = {};
+    Module.onRuntimeInitialized = function() {
+      var count = 50;
+      // c中分配内存的单位是字节 对应到int型就是4个字节
+      var ptr = Module._malloc(4 * count); // ptr是起始地址
+      for (var i = 0; i < count; i++){
+        Module.HEAP32[ptr / 4 + i] = i + 1;
+      }
+      console.log(Module._sum(ptr, count));
+      Module._free(ptr);
+      // 所以 如果传arraybuffer 可以传 这么分配  一个字节的数组
+
+
+    }
+    </script>
+    <script src="sum.js"></script>
+  </body>
