@@ -1,0 +1,55 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Emscripten:Export1</title>
+  </head>
+  <body>
+    <script>
+    Module = {};
+    Module.onRuntimeInitialized = function() {
+      var publicKey = allocateUTF8('1234567');
+      debugger
+      var ptr = Module._get_key(publicKey);
+      var str = UTF8ToString(ptr);
+      console.log('获取加密后key',str);
+      _free(publicKey);
+      _free(ptr);
+
+
+      var key = allocateUTF8('123');
+      var a = Module._set_key(key);
+      if(a == 0) {
+        console.log('设置成功')
+      }
+      _free(key);
+
+
+      const buffer = new ArrayBuffer(8);
+      const data = new Uint8Array(buffer);
+      for(var i=0;i<data.length;i++) {
+        data[i] = i+10;
+      }
+      var count = data.length;
+
+      // c中分配内存的单位是字节 对应到int型就是4个字节
+      var ptr = Module._malloc(count); // ptr是起始地址
+      for (var i = 0; i < count; i++){
+        Module.HEAP8[ptr+ i] = data[i];
+      }
+      var result = Module._decode_data(ptr, count);
+    
+      const buffer2 = new ArrayBuffer(8);
+      const data2 = new Uint8Array(buffer);
+
+      for(let i=0;i<8;i++) {
+        data2[i] = Module.HEAP8[result+i]
+      }
+      console.log(data2);
+      Module._free(ptr);
+    }
+    </script>
+    <script src="encode.js"></script>
+  </body>
+</html>
