@@ -1,0 +1,74 @@
+  <body>
+    <div id="getTransKey">
+        getTransKey
+    </div>
+    <div id="saveDecodeKey">
+        saveDecodeKey
+    </div>
+    <div id="decodeData">
+        decodeData
+    </div>
+    <script>
+
+    document.getElementById('getTransKey').addEventListener('click', function() {
+      getTransKey();
+    })
+    document.getElementById('saveDecodeKey').addEventListener('click', function() {
+      saveDecodeKey();
+    })
+    document.getElementById('decodeData').addEventListener('click', function() {
+      decodeData();
+    })
+    
+
+
+    Module = {};
+    
+    var getTransKey;
+    var saveDecodeKey;
+    var decodeData;
+    Module.onRuntimeInitialized = function() {
+
+      getTransKey = function() {
+        let transkeyAddress = Module._getTransKey('设置的key');
+        let transKey = UTF8ToString(transkeyAddress);
+        console.log(transKey);
+      }
+
+      saveDecodeKey = function() {
+        //Js把返回 传给wasm  wasm中就用B 解密获取到 C
+        Module._saveDecodeKey(allocateUTF8('后端获取的key'))
+      }
+
+      decodeData = function(data) {
+        data = data || new ArrayBuffer(40);
+        let count = data.byteLength;
+        // ptr 传给wasm的数据
+        var ptr = Module._malloc(4 * count); // ptr是起始地址
+        for (var i = 0; i < count; i++){
+          Module.HEAP32[ptr / 4 + i] = i + 1;
+        }
+
+        // 解密返回
+        let ret = Module._decodeData(ptr);
+
+        var result = [];
+        // var dataview = new DataView(result, 0,0);
+
+        let arrayStartIndex = ret >> 2;
+        for (var i = 0; i < count; i++){
+          // dataview 从1开始， 内存地址
+          result[i] =  Module.HEAP32[arrayStartIndex + i];
+          // dataview.setUint8(i+1, Module.HEAP32[arrayStartIndex + i]);
+        }
+        result = new Uint8Array(result);
+
+        console.log(result.buffer);
+        Module._free(ptr);
+      }
+
+
+    }
+    </script>
+    <script src="player.js"></script>
+  </body>

@@ -7,6 +7,7 @@
       if (ptr == 0) return;
       var str = '';
       for (var i = 0; i < 10; i++){
+        // console.log(ptr)
         str += Module.HEAP32[(ptr >> 2) + i];
         str += ' ';
       }
