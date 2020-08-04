@@ -1,3 +1,8 @@
+emcc capi_js.cc --js-library pkg.js -o capi_js.js
+
+本来想的是把解密放在js里面 编译进去让c去调用 但是发现 链接进入的js代码其实还是在js的胶水代码中 没有放到c中
+所以还是不行 解密还是要放在c中。
+
 2.2 JavaScript函数注入C
 Emscripten提供了多种在C环境调用JavaScript的方法，包括：
 
