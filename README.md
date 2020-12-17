@@ -1,6 +1,15 @@
 
 https://www.wenjiangs.com/doc/80ukjl3j
 
+1.1 安装Emscripten
+Emscripten包含了将C/C++代码编译为WebAssembly所需的完整工具集（LLVM、Node.js、Python、Java等），它不依赖于任何其他的编译器环境。
+
+1.1.1 使用emsdk命令行工具安装Emscripten
+emsdk是一组基于Python 2的脚本，因此首先需要安装Python 2.7.12或更新版。Python下载地址：https://www.python.org/downloads/
+
+下载emsdk   然后执行命令 已经放到了百度网盘。 安装后就有emcc命令
+
+
 1 安装emcc
 编译c文件的方法 gcc 文件名
 
